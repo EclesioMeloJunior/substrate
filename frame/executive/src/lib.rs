@@ -591,7 +591,7 @@ where
 		// it may open an attack vector.
 		if r.is_err() && dispatch_info.class == DispatchClass::Mandatory {
 			let Err(err) = r else {todo!()};
-			frame_support::log::info!(
+			frame_support::log::warn!(
 				target: LOG_TARGET,
 				">>> WHILE APPLYING MANDATORY EXTRINSIC -> {:?}",
 				err,
