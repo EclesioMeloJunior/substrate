@@ -590,6 +590,13 @@ where
 		// The entire block should be discarded if an inherent fails to apply. Otherwise
 		// it may open an attack vector.
 		if r.is_err() && dispatch_info.class == DispatchClass::Mandatory {
+			let Err(err) = r else {todo!()};
+			frame_support::log::info!(
+				target: LOG_TARGET,
+				">>> WHILE APPLYING MANDATORY EXTRINSIC -> {:?}",
+				err,
+			);
+
 			return Err(InvalidTransaction::BadMandatory.into())
 		}
 
