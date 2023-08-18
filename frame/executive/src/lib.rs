@@ -666,9 +666,9 @@ where
 			xt.get_dispatch_info()
 		};
 
-		if dispatch_info.class == DispatchClass::Mandatory {
-			return Err(InvalidTransaction::MandatoryValidation.into())
-		}
+		// if dispatch_info.class == DispatchClass::Mandatory {
+		// 	return Err(InvalidTransaction::MandatoryValidation.into())
+		// }
 
 		within_span! {
 			sp_tracing::Level::TRACE, "validate";
