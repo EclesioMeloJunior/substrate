@@ -589,16 +589,16 @@ where
 		//
 		// The entire block should be discarded if an inherent fails to apply. Otherwise
 		// it may open an attack vector.
-		if r.is_err() && dispatch_info.class == DispatchClass::Mandatory {
-			let Err(err) = r else {todo!()};
-			frame_support::log::warn!(
-				target: LOG_TARGET,
-				">>> WHILE APPLYING MANDATORY EXTRINSIC -> {:?}",
-				err,
-			);
+		// if r.is_err() && dispatch_info.class == DispatchClass::Mandatory {
+		// 	let Err(err) = r else {todo!()};
+		// 	frame_support::log::warn!(
+		// 		target: LOG_TARGET,
+		// 		">>> WHILE APPLYING MANDATORY EXTRINSIC -> {:?}",
+		// 		err,
+		// 	);
 
-			return Err(InvalidTransaction::BadMandatory.into())
-		}
+		// 	return Err(InvalidTransaction::BadMandatory.into())
+		// }
 
 		<frame_system::Pallet<System>>::note_applied_extrinsic(&r, dispatch_info);
 
