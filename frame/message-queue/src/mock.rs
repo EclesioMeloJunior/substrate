@@ -188,7 +188,7 @@ impl ProcessMessage for RecordingMessageProcessor {
 		};
 		let required = Weight::from_parts(weight, weight);
 
-		if meter.check_accrue(required) {
+		if meter.try_consume(required).is_ok() {
 			let mut m = MessagesProcessed::get();
 			m.push((message.to_vec(), origin));
 			MessagesProcessed::set(m);
@@ -245,7 +245,7 @@ impl ProcessMessage for CountingMessageProcessor {
 		}
 		let required = Weight::from_parts(1, 1);
 
-		if meter.check_accrue(required) {
+		if meter.try_consume(required).is_ok() {
 			NumMessagesProcessed::set(NumMessagesProcessed::get() + 1);
 			Ok(true)
 		} else {
@@ -295,10 +295,15 @@ where
 	ext
 }
 
-/// Run this closure in test externalities.
-pub fn test_closure<R>(f: impl FnOnce() -> R) -> R {
-	let mut ext = new_test_ext::<Test>();
-	ext.execute_with(f)
+/// Run the function pointer inside externalities and asserts the try_state hook at the end.
+pub fn build_and_execute<T: Config>(test: impl FnOnce() -> ())
+where
+	BlockNumberFor<T>: From<u32>,
+{
+	new_test_ext::<T>().execute_with(|| {
+		test();
+		MessageQueue::do_try_state().expect("All invariants must hold after a test");
+	});
 }
 
 /// Set the weight of a specific weight function.
